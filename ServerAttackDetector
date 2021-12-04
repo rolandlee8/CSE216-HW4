@@ -1,0 +1,13 @@
+import csv
+
+
+class ServerAttackDetector:
+    def __init__(self, data_file):
+        with open(data_file) as file:
+            content = file.readlines()
+        header = content[:1]
+        rows = content[1:]
+        print(header)
+        print(rows)
+
+d = ServerAttackDetector("C:\\Users\\Roland\\Downloads\\hw4testfile.csv")  # to be replaced by actual path
