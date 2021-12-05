@@ -1,13 +1,26 @@
 import csv
+from datetime import *
 
 
 class ServerAttackDetector:
     def __init__(self, data_file):
-        with open(data_file) as file:
-            content = file.readlines()
-        header = content[:1]
-        rows = content[1:]
-        print(header)
-        print(rows)
+        with open(data_file, 'r') as file:
+            csvFile = csv.reader(file)
+            for lines in csvFile:
+                print(lines)
 
-d = ServerAttackDetector("C:\\Users\\Roland\\Downloads\\hw4testfile.csv")  # to be replaced by actual path
+    def detect(csvFile):
+        for x in csvFile[1:]:
+            if csvFile[x-1][2].strip() == 'UDP':
+                if csvFile[x-1][11] == 'suspicious':
+                    if csvFile[x-1][1] < 1:
+                        dt = datetime.strptime(csvFile[x-1][0], '%Y-%m-%d %H:%M:%S')
+                        dt_next = datetime.strptime(csvFile[x][0], '%Y-%m-%d %H:%M:%S')
+                        print(dt)
+                        print(dt_next)
+
+
+
+d = ServerAttackDetector("C:/Users/east7/Downloads/hw4testfile.csv")  # to be replaced by actual path
+d.detect()
+
