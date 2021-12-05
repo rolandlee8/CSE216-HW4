@@ -4,23 +4,25 @@ from datetime import *
 
 class ServerAttackDetector:
     def __init__(self, data_file):
+        global readFile
+        global listFile
         with open(data_file, 'r') as file:
-            csvFile = csv.reader(file)
-            for lines in csvFile:
+            readFile = csv.reader(file)
+            listFile = list(readFile)
+            for lines in listFile:
                 print(lines)
 
-    def detect(csvFile):
-        for x in csvFile[1:]:
-            if csvFile[x-1][2].strip() == 'UDP':
-                if csvFile[x-1][11] == 'suspicious':
-                    if csvFile[x-1][1] < 1:
-                        dt = datetime.strptime(csvFile[x-1][0], '%Y-%m-%d %H:%M:%S')
-                        dt_next = datetime.strptime(csvFile[x][0], '%Y-%m-%d %H:%M:%S')
-                        print(dt)
-                        print(dt_next)
+    def detect(self):
+        for x in range(1,len(listFile)-1):
+            if listFile[x-1][2].strip() == 'UDP' \
+                    and listFile[x-1][12] == 'suspicious' \
+                    and float(listFile[x-1][1].strip()) < 1:
+                        dt = datetime.strptime(listFile[x-1][0], '%Y-%m-%d %H:%M:%S.%f')
+                        dt_next = datetime.strptime(listFile[x][0], '%Y-%m-%d %H:%M:%S.%f')
+                        seconds_1 = dt.timestamp()
+                        seconds_2 = dt_next.timestamp()
 
-
-
-d = ServerAttackDetector("C:/Users/east7/Downloads/hw4testfile.csv")  # to be replaced by actual path
-d.detect()
-
+                        if (abs(seconds_2 - seconds_1) < 1):
+                            b=",".join(listFile[x])
+                            return (x,b)
+        return (None,None)
